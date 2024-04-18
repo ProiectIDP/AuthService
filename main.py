@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 SECRET_KEY = "c6258bf0076e5f28f08142a60b95fc78f9cdc9827ce192c6dcb0d934ef816b83"
 ALGORITHM = "HS256"
@@ -39,11 +41,17 @@ class User(BaseModel):
 class UserInDB(User):
     hashed_password: str
 
+class LoginForm(BaseModel):
+    username: str
+    password: str
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="templates"), name="static")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -111,7 +119,7 @@ async def add_user_to_database(username:str, email: str, password: str):
 
 
 @app.post("/token", response_model = Token)
-async def login_for_access_toke(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_toke(form_data: LoginForm):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
@@ -130,4 +138,12 @@ async def login_for_access_toke(form_data: RegisterRequestForm):
 async def read_users_me():
     current_user = await get_current_user()
     return current_user
+
+@app.get("/login", response_class=FileResponse)
+async def read_login():
+    return "templates/login_page.html"
+
+@app.get("/registerpage", response_class=FileResponse)
+async def read_login():
+    return "templates/register_page.html"
 
