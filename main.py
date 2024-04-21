@@ -138,7 +138,7 @@ async def add_user_to_database(username:str, email: str, password: str, db:Sessi
 
 @app.post("/token")
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],db = Depends(get_db)
+    form_data: LoginForm,db = Depends(get_db)
 ) -> Token:
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:

@@ -58,7 +58,10 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: formData
+                        body: JSON.stringify({
+                           "username": username,
+                           "password": password,
+                        })
                     });
 
                     if (response.ok) {
