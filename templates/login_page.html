@@ -68,7 +68,8 @@
                         // Handle successful login
 						const data = await response.json();
                         console.log(data.access_token);
-						document.cookie = `umail_token=${accessToken}; path=/`;
+						document.cookie = `umail_token=${data.access_token}; path=/`;
+                        window.location.href = "http://localhost:8080/inbox";
 						//console.log(respones.body)
                     } else {
                         // Handle unsuccessful login
