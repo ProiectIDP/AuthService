@@ -10,6 +10,7 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from models import UserInDb, Base
+from fastapi.middleware.cors import CORSMiddleware
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -66,6 +67,14 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="templates"), name="static")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type"],
+)
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
