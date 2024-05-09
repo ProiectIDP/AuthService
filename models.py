@@ -20,6 +20,7 @@ class Email(Base):
     recipient = Column(String, index=True)
     subject = Column(String, index=True)
     message = Column(String, index=True)
+    timestamp = Column(String, index=True)
     starred_by_recepient = Column(Boolean)
     starred_by_sender = Column(Boolean)
     read = Column(Boolean)
