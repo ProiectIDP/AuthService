@@ -69,7 +69,7 @@
 						const data = await response.json();
                         console.log(data.access_token);
 						document.cookie = `umail_token=${data.access_token}; path=/`;
-                        window.location.href = "http://localhost:80/inbox";
+                        window.location.href = "/inbox";
 						//console.log(respones.body)
                     } else {
                         // Handle unsuccessful login
