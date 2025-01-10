@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: ./auth_logic
+    command: uvicorn main:app --reload --port=8000 --host=0.0.0.0
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./auth_logic:/app
+    environment:
+      - DATABASE_URL=postgresql://santaletter:santaletter@db:5431/santaletter
+    depends_on:
+      - db
